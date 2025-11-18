@@ -1,63 +1,39 @@
 import pytest
 import rtmc_client as rtmc
 
-# Test that you can connect to an RTMC Card
-def test_connect():
+@pytest.fixture
+def emulator():
     api_token = "dummy_token"
 
-    # Create emulator
+    # Start the emulator
     emulator = rtmc.EmulationServer(api_token)
     emulator.start()
-    
-    rtmc_card = rtmc.Device("127.0.0.1", 65001)
-    response = rtmc_card.connect(api_token)
+
+    try:
+        yield emulator
+    finally:
+        emulator.stop()
+
+
+
+@pytest.fixture
+def device(emulator):
+    # Connect to emulator
+    device = rtmc.Device(emulator.ipv4_addr, emulator.tcp_port)
+    response = device.connect(emulator.api_token)
     assert response.get("status") == "OKAY"
 
-    emulator.stop()
+    try:
+        yield device
 
-
-
-# Test that you can disconnect from an RTMC Card
-def test_disconnect():
-    api_token = "dummy_token"
-
-    # Create emulator
-    emulator = rtmc.EmulationServer(api_token)
-    emulator.start()
-    
-    # Connect
-    rtmc_card = rtmc.Device("127.0.0.1", 65001)
-    response = rtmc_card.connect(api_token)
-    assert response.get("status") == "OKAY"
-
-    # Disconnect
-    response = rtmc_card.disconnect()
-    assert response.get("status") == "OKAY"
-
-    emulator.stop()
+    finally:
+        # Disconnect from emulator
+        response = device.disconnect()
+        assert response.get("status") == "OKAY"
 
 
 
 # Test that you can send commands to an RTMC Card
-def test_command():
-    api_token = "dummy_token"
-
-    # Create emulator
-    emulator = rtmc.EmulationServer(api_token)
-    emulator.start()
-    
-    # Connect
-    # breakpoint()
-    rtmc_card = rtmc.Device("127.0.0.1", 65001)
-    response = rtmc_card.connect(api_token)
+def test_send(emulator, device):
+    response = device.send(f"auth {emulator.api_token}")
     assert response.get("status") == "OKAY"
-
-    # Send a command
-    response = rtmc_card.send(f"auth {api_token}")
-    assert response.get("status") == "OKAY"
-
-    # Disconnect
-    response = rtmc_card.disconnect()
-    assert response.get("status") == "OKAY"
-
-    emulator.stop()
