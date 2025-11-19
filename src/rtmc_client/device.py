@@ -10,6 +10,7 @@ class Device:
         ipv4_addr,
         port,
         service=None,
+        device=None,
         serial_number=None,
         firmware_version=None
     ):
@@ -17,6 +18,7 @@ class Device:
         self.ipv4_addr = ipv4_addr
         self.port = port
         self.service = service
+        self.device = device
         self.serial_number = serial_number
         self.firmware_version = firmware_version
 
@@ -25,9 +27,61 @@ class Device:
 
 
 
-    def discover(self):
-        # TODO
-        pass
+    @classmethod
+    def discover(
+        cls,
+        pattern,
+        timeout=1,
+        tries=3,
+        iface=None,
+        multicast_group="239.255.255.126",
+        port=65000,
+    ):
+        # Use set to store unique devices only
+        # (don't list the same card twice!)
+        device_tuples = set()
+        
+        # Create UDP socket
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+            sock.settimeout(timeout)
+
+            for _ in range(tries):
+                # Send discover query
+                sock.sendto(f"discover {pattern}".encode(), (multicast_group, port))
+
+                # Listen to all responses within timeout
+                while True:
+                    try:
+                        response, server = sock.recvfrom(1024)
+
+                        # Try parsing JSON data into tuple
+                        try:
+                            json_data = json.loads(response.decode())
+                            device_tuple = (
+                                server[0], # The IP address
+                                int(json_data["port"]),
+                                json_data["service"],
+                                json_data["device"],
+                                json_data["serial_number"],
+                                json_data["firmware_version"]
+                            )
+                        except (
+                            UnicodeDecodeError,
+                            json.JSONDecodeError,
+                            KeyError,
+                            TypeError,
+                            ValueError
+                        ):
+                            continue # malformed response, skip
+                        
+                        # Add device to the set (only adds if tuple is unique)
+                        device_tuples.add(device_tuple)
+
+                    except socket.timeout:
+                        break
+
+        # Turn tuple set into list of Device objects
+        return [cls(*device) for device in device_tuples]
 
 
 

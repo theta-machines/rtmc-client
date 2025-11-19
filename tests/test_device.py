@@ -22,3 +22,10 @@ def device(emulator):
 def test_send(emulator, device):
     response = device.send(f"auth {emulator.api_token}")
     assert response.get("status") == "OKAY"
+
+
+
+# Test device discovery
+def test_discover(emulator):
+    devices = rtmc.Device.discover("rtmc*", timeout=0.1, tries=1)
+    assert len(devices) > 0
