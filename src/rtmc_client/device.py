@@ -2,7 +2,7 @@
 Original Author: Ryan Stracener
 """
 
-import json, socket
+import json, psutil, socket
 
 class Device:
     def __init__(
@@ -33,21 +33,38 @@ class Device:
         pattern,
         timeout=1,
         tries=3,
-        iface=None,
+        ifaces=None,
         multicast_group="239.255.255.126",
         port=65000,
     ):
         # Use set to store unique devices only
         # (don't list the same card twice!)
         device_tuples = set()
-        
+
+        # If no ifaces were given explicitly, then find all ifaces
+        if ifaces is None:
+            ifaces = []
+            for _, addrs in psutil.net_if_addrs().items():
+                for addr in addrs:
+                    if addr.family == socket.AF_INET:
+                        ifaces.append(addr.address)
+
+        # Remove duplicate interface IPs
+        ifaces = set(ifaces)
+
         # Create UDP socket
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.settimeout(timeout)
 
             for _ in range(tries):
-                # Send discover query
-                sock.sendto(f"discover {pattern}".encode(), (multicast_group, port))
+
+                # Send discovery query over all interfaces
+                for iface_ip in ifaces:
+                    try:
+                        sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_IF, socket.inet_aton(iface_ip))
+                        sock.sendto(f"discover {pattern}".encode(), (multicast_group, port))
+                    except OSError:
+                        continue # Invalid iface, skip
 
                 # Listen to all responses within timeout
                 while True:

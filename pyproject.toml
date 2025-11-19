@@ -14,6 +14,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "psutil>=7.0,<8.0",
+]
 
 [project.urls]
 "Documentation" = "https://docs.thetamachines.com/"
