@@ -3,11 +3,12 @@ requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "rtmc_client"
-version = "0.0.1"
+name = "rtmc-client"
+version = "0.1.0"
 description = "Client-side library for managing RTMC Cards"
 license = "BSD-2-Clause"
 license-files = ["LICENSE.txt"]
+readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -15,4 +16,6 @@ classifiers = [
 ]
 
 [project.urls]
-Source = "https://github.com/theta-machines/rtmc-client"
+"Documentation" = "https://docs.thetamachines.com/"
+"Source Code" = "https://github.com/theta-machines/rtmc-client"
+"Bug Tracker" = "https://github.com/theta-machines/rtmc-client/issues"
