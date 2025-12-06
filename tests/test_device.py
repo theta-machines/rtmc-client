@@ -1,10 +1,10 @@
 import pytest
-import rtmc_client as rtmc
+import aio_mgr as aio
 
 @pytest.fixture
 def device(emulator):
     # Connect to emulator
-    device = rtmc.Device(emulator.ipv4_addr, emulator.tcp_port)
+    device = aio.Device(emulator.ipv4_addr, emulator.tcp_port)
     response = device.connect(emulator.api_token)
     assert response.get("status") == "OKAY"
 
@@ -18,7 +18,7 @@ def device(emulator):
 
 
 
-# Test that you can send commands to an RTMC Card
+# Test that you can send commands to an AIO Card
 def test_send(emulator, device):
     response = device.send(f"auth {emulator.api_token}")
     assert response.get("status") == "OKAY"
@@ -27,12 +27,12 @@ def test_send(emulator, device):
 
 # Test device discovery
 def test_discover(emulator):
-    devices = rtmc.Device.discover("rtmc*", timeout=0.1, tries=1)
+    devices = aio.Device.discover("aio*", timeout=0.1, tries=1)
     assert len(devices) > 0
 
 
 
 # Test device discovery (explicit iface)
 def test_discover_ifaces(emulator):
-    devices = rtmc.Device.discover("rtmc*", ifaces=["0.0.0.0"], timeout=0.1, tries=1)
+    devices = aio.Device.discover("aio*", ifaces=["0.0.0.0"], timeout=0.1, tries=1)
     assert len(devices) > 0

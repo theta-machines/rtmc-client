@@ -1,5 +1,5 @@
-# RTMC Client Library
-The RTMC Client library (`rtmc-client`) is a client-side Python library for managing RTMC Cards. Specifically, it handles:
+# AIO Management Library
+The AIO Management library (`aio-mgr`) is a client-side Python package for managing Theta Machines All-in-One Motion Controllers. Specifically, it handles:
 
 * device discovery
 * socket connections

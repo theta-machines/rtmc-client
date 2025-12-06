@@ -3,7 +3,7 @@
 """
     Original Author: Ryan Stracener
 
-    This script handles building, testing, and deploying rtmc-client.
+    This script handles building, testing, and deploying the aio-mgr package.
     For usage, read the HELP_MESSAGE variable below.
 """
 

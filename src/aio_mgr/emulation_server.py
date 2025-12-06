@@ -1,8 +1,8 @@
 """
 Original Author: Ryan Stracener
 
-This is a bare-bones RTMC Card emulator. It's sole purpose is to facilitate
-the testing of a program's connection logic. It has the following functions:
+This is a bare-bones AIO emulator. It's sole purpose is to facilitate the
+testing of a program's connection logic. It has the following functions:
   * Responds to UDP discovery queries
   * Acts as a TCP server for receiving commands
 
@@ -20,7 +20,7 @@ class EmulationServer:
     def __init__(
         self,
         api_token,
-        service="rtmc-tcp-1.0-emulator",
+        service="aio-tcp-1.0-emulator",
         tcp_port=65001,
         device="bare-bones-emulator",
         serial_number="1234ABCD",

@@ -1,12 +1,12 @@
 import pytest
-import rtmc_client as rtmc
+import aio_mgr as aio
 
 @pytest.fixture
 def emulator():
     api_token = "dummy_token"
 
     # Start the emulator
-    emulator = rtmc.EmulationServer(api_token)
+    emulator = aio.EmulationServer(api_token)
     emulator.start()
 
     try:

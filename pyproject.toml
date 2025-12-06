@@ -3,9 +3,9 @@ requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "rtmc-client"
+name = "aio-mgr"
 version = "0.1.0"
-description = "Client-side library for managing RTMC Cards"
+description = "Client-side library for managing Theta Machines All-in-One Motion Controllers"
 license = "BSD-2-Clause"
 license-files = ["LICENSE.txt"]
 readme = "README.md"
@@ -20,5 +20,5 @@ dependencies = [
 
 [project.urls]
 "Documentation" = "https://docs.thetamachines.com/"
-"Source Code" = "https://github.com/theta-machines/rtmc-client"
-"Bug Tracker" = "https://github.com/theta-machines/rtmc-client/issues"
+"Source Code" = "https://github.com/theta-machines/aio-mgr"
+"Bug Tracker" = "https://github.com/theta-machines/aio-mgr/issues"

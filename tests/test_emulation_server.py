@@ -1,6 +1,6 @@
 import json
 import pytest
-import rtmc_client as rtmc
+import aio_mgr as aio
 import socket
 
 @pytest.fixture
@@ -94,7 +94,7 @@ def test_discover_tcp(emulator, tcp_socket):
     assert response.get("status") == "OKAY"
 
     # Send the discover query
-    tcp_socket.sendall("discover rtmc*".encode())
+    tcp_socket.sendall("discover aio*".encode())
     response = json.loads(tcp_socket.recv(1024).decode())
 
     # Verify the response data
@@ -124,7 +124,7 @@ def test_discover_tcp_bad_query(emulator, tcp_socket):
 
 # Test the discover command via UDP multicast
 def test_discover_udp(emulator, udp_socket):
-    udp_socket.sendto(b"discover rtmc*", (emulator.udp_multicast_group, emulator.udp_port))
+    udp_socket.sendto(b"discover aio*", (emulator.udp_multicast_group, emulator.udp_port))
 
     response, server = udp_socket.recvfrom(1024)
     json_data = json.loads(response.decode())
